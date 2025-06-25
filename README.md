@@ -1,2 +1,2 @@
 Resume_Builder
-Project url : https://cozy-blini-acc7d9.netlify.app/
+Project url : https://harmonious-melomakarona-3048fb.netlify.app/
