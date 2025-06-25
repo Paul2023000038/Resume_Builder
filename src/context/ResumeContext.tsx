@@ -112,16 +112,20 @@ export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         .from('resumes')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .limit(1);
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error loading resume:', error);
         return;
       }
 
-      if (data) {
-        setResumeData(data.resume_data);
-        setSelectedTemplate(data.template || 'modern');
+      if (data && data.length > 0) {
+        setResumeData(data[0].resume_data);
+        setSelectedTemplate(data[0].template || 'modern');
+      } else {
+        // No resume found, use default data
+        setResumeData(defaultResumeData);
+        setSelectedTemplate('modern');
       }
     } catch (error) {
       console.error('Error loading resume:', error);
