@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ResumeData, ResumeTemplate } from '../types/resume';
 import { generateUniqueId } from '../utils/helpers';
+import { useAuth } from './AuthContext';
+import { supabase } from '../lib/supabase';
 
 // Default resume data
 const defaultResumeData: ResumeData = {
@@ -71,22 +73,88 @@ interface ResumeContextType {
   selectedTemplate: ResumeTemplate;
   setSelectedTemplate: (template: ResumeTemplate) => void;
   resetResumeData: () => void;
+  saveResumeData: () => Promise<void>;
+  loading: boolean;
 }
 
 const ResumeContext = createContext<ResumeContextType | undefined>(undefined);
 
 export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [resumeData, setResumeData] = useState<ResumeData>(() => {
-    const savedData = localStorage.getItem('resumeData');
-    return savedData ? JSON.parse(savedData) : defaultResumeData;
-  });
-  
+  const { user } = useAuth();
+  const [resumeData, setResumeData] = useState<ResumeData>(defaultResumeData);
   const [selectedTemplate, setSelectedTemplate] = useState<ResumeTemplate>('modern');
+  const [loading, setLoading] = useState(false);
 
-  // Save to localStorage whenever data changes
+  // Load resume data when user changes
+  useEffect(() => {
+    if (user) {
+      loadResumeData();
+    } else {
+      // If no user, load from localStorage as fallback
+      const savedData = localStorage.getItem('resumeData');
+      if (savedData) {
+        setResumeData(JSON.parse(savedData));
+      }
+    }
+  }, [user]);
+
+  // Auto-save to localStorage for offline functionality
   useEffect(() => {
     localStorage.setItem('resumeData', JSON.stringify(resumeData));
   }, [resumeData]);
+
+  const loadResumeData = async () => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('resumes')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading resume:', error);
+        return;
+      }
+
+      if (data) {
+        setResumeData(data.resume_data);
+        setSelectedTemplate(data.template || 'modern');
+      }
+    } catch (error) {
+      console.error('Error loading resume:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveResumeData = async () => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      const { error } = await supabase
+        .from('resumes')
+        .upsert({
+          user_id: user.id,
+          resume_data: resumeData,
+          template: selectedTemplate,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (error) {
+        console.error('Error saving resume:', error);
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error saving resume:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updatePersonalInfo = (info: Partial<ResumeData['personalInfo']>) => {
     setResumeData(prev => ({
@@ -296,6 +364,8 @@ export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       selectedTemplate,
       setSelectedTemplate,
       resetResumeData,
+      saveResumeData,
+      loading,
     }}>
       {children}
     </ResumeContext.Provider>
