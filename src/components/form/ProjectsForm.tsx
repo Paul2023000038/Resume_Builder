@@ -18,16 +18,23 @@ const ProjectsForm: React.FC = () => {
   const handleTechnologiesChange = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     updateProject(id, { 
-      technologies: value.split(',').map(tech => tech.trim()) 
+      technologies: value.split(',').map(tech => tech.trim()).filter(tech => tech) 
     });
   };
 
   return (
     <FormSection title="Projects">
+      <div className="mb-4">
+        <p className="text-sm text-gray-600">
+          Showcase your personal projects, open-source contributions, or significant work projects. 
+          Focus on projects that demonstrate relevant skills and technologies.
+        </p>
+      </div>
+      
       {projects.map((project, index) => (
         <div 
           key={project.id} 
-          className="p-4 mb-4 border border-gray-200 rounded-lg bg-white shadow-sm"
+          className="p-6 mb-6 border border-gray-200 rounded-lg bg-white shadow-sm"
         >
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium text-gray-800">Project #{index + 1}</h3>
@@ -49,25 +56,25 @@ const ProjectsForm: React.FC = () => {
               name="name"
               value={project.name}
               onChange={(e) => handleChange(project.id, e)}
-              placeholder="Portfolio Website"
+              placeholder="E-commerce Platform"
             />
             <InputField
-              label="Project Link"
+              label="Project Link (Optional)"
               name="link"
               value={project.link || ''}
               onChange={(e) => handleChange(project.id, e)}
-              placeholder="https://example.com/project"
+              placeholder="https://github.com/username/project or https://project-demo.com"
             />
           </div>
           
           <div className="mt-4">
             <TextareaField
-              label="Description"
+              label="Project Description"
               name="description"
               value={project.description}
               onChange={(e) => handleChange(project.id, e)}
-              placeholder="Describe the project, your role, and its impact"
-              rows={3}
+              placeholder="Describe what the project does, your role in it, key features, and the impact or results achieved. Be specific about your contributions."
+              rows={4}
             />
           </div>
           
@@ -77,8 +84,11 @@ const ProjectsForm: React.FC = () => {
               name="technologies"
               value={project.technologies.join(', ')}
               onChange={(e) => handleTechnologiesChange(project.id, e)}
-              placeholder="React, Node.js, MongoDB, etc. (comma separated)"
+              placeholder="React, Node.js, MongoDB, AWS, Docker (comma separated)"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              List the main technologies, frameworks, and tools used in this project
+            </p>
           </div>
         </div>
       ))}

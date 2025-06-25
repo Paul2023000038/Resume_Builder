@@ -15,26 +15,31 @@ const SkillsForm: React.FC = () => {
   };
 
   return (
-    <FormSection title="Skills">
-      <div className="grid grid-cols-1 gap-4">
+    <FormSection title="Technical Skills">
+      <div className="space-y-4">
+        <p className="text-sm text-gray-600 mb-4">
+          Add your technical skills, programming languages, frameworks, tools, and technologies. 
+          These will be displayed in a clean, organized format on your resume.
+        </p>
+        
         {skills.map((skill, index) => (
           <div 
             key={skill.id}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg"
           >
             <div className="flex-grow">
               <InputField
-                label={index === 0 ? "Skill" : ""}
+                label={index === 0 ? "Skill / Technology" : ""}
                 name="name"
                 value={skill.name}
                 onChange={(e) => handleChange(skill.id, e)}
-                placeholder="e.g., JavaScript, Project Management, etc."
+                placeholder="e.g., JavaScript, React, Python, AWS, Docker, etc."
               />
             </div>
             <div className="w-36">
               {index === 0 && (
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Level
+                  Proficiency Level
                 </label>
               )}
               <select
@@ -50,9 +55,7 @@ const SkillsForm: React.FC = () => {
               </select>
             </div>
             <div className="flex items-end">
-              {index === 0 ? (
-                <div className="h-10"></div>
-              ) : (
+              {skills.length > 1 ? (
                 <button
                   type="button"
                   onClick={() => removeSkill(skill.id)}
@@ -61,6 +64,8 @@ const SkillsForm: React.FC = () => {
                 >
                   <Trash2 size={18} />
                 </button>
+              ) : (
+                <div className="w-10 h-10"></div>
               )}
             </div>
           </div>
@@ -74,7 +79,7 @@ const SkillsForm: React.FC = () => {
         className="mt-4 w-full"
       >
         <PlusCircle size={16} className="mr-2" />
-        Add Skill
+        Add Technical Skill
       </Button>
     </FormSection>
   );

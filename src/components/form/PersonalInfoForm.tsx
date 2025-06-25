@@ -22,7 +22,7 @@ const PersonalInfoForm: React.FC = () => {
           name="fullName"
           value={personalInfo.fullName}
           onChange={handleChange}
-          placeholder="John Doe"
+          placeholder="Paul Ochieng"
           required
         />
         <InputField
@@ -31,7 +31,7 @@ const PersonalInfoForm: React.FC = () => {
           type="email"
           value={personalInfo.email}
           onChange={handleChange}
-          placeholder="john.doe@example.com"
+          placeholder="paul.ochieng@example.com"
           required
         />
         <InputField
@@ -39,35 +39,35 @@ const PersonalInfoForm: React.FC = () => {
           name="phone"
           value={personalInfo.phone}
           onChange={handleChange}
-          placeholder="(123) 456-7890"
+          placeholder="+1 (555) 123-4567"
         />
         <InputField
           label="Location"
           name="location"
           value={personalInfo.location}
           onChange={handleChange}
-          placeholder="City, State"
+          placeholder="New York, NY"
         />
         <InputField
           label="LinkedIn"
           name="linkedin"
           value={personalInfo.linkedin || ''}
           onChange={handleChange}
-          placeholder="linkedin.com/in/johndoe"
+          placeholder="linkedin.com/in/paul-ochieng"
         />
         <InputField
           label="GitHub"
           name="github"
           value={personalInfo.github || ''}
           onChange={handleChange}
-          placeholder="github.com/johndoe"
+          placeholder="github.com/paul-ochieng"
         />
         <InputField
-          label="Website"
+          label="Portfolio Website"
           name="website"
           value={personalInfo.website || ''}
           onChange={handleChange}
-          placeholder="johndoe.com"
+          placeholder="www.paulochieng.com"
         />
       </div>
       <div className="mt-4">
@@ -76,8 +76,8 @@ const PersonalInfoForm: React.FC = () => {
           name="summary"
           value={personalInfo.summary}
           onChange={handleChange}
-          placeholder="Write a brief summary of your professional background and key qualifications..."
-          rows={4}
+          placeholder="Write a compelling professional summary that highlights your key qualifications, experience, and career objectives. This should be 3-4 sentences that capture your professional identity and value proposition."
+          rows={5}
         />
       </div>
     </FormSection>
